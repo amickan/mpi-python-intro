@@ -1,9 +1,5 @@
-def fibonnaci(num):
-    fibonnaci = [1,1]
-    for number in range(100):
-        while fibonnaci[-1] < num:
-            if number < 2:
-                fibonnaci.append(number)
-            else:
-                fibonnaci.append(fibonnaci[number-2]+fibonnaci[number-1])
-    return fibonnaci
+def fibonnaci_fun(highest):
+    fibonnaci = [0,1]
+    while fibonnaci[-2]+fibonnaci[-1] < highest:
+        fibonnaci.append(fibonnaci[-2]+fibonnaci[-1])
+    return fibonnaci 
