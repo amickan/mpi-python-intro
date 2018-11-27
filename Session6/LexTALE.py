@@ -14,7 +14,8 @@ import time
 # open a window of 800 by 600 pixels (note the tuple for specifying size!)
 win = visual.Window((1000, 800), color='teal')
 # prepare text stimulus
-text = visual.TextStim(win, text='0', color='white', wrapWidth=150)
+text = visual.TextStim(win, text='0', color='white', wrapWidth=800, height = 24, units = 'pix')
+stim = visual.TextStim(win, text='0', color='white', wrapWidth=800, height = 30, units = 'pix')
 # load trial dataframe 
 items = pd.read_table('testlist.txt')
 
@@ -25,12 +26,15 @@ gui.show()
 ppnr = gui.data[0]
 
 # show instructions
-text.setText("""This test consists of about 60 trials, in each of which you will see a string of letters. 
-Your task is to decide whether this is an existing English word or not. 
+text.setText("""This test consists of 60 trials, in each of which you will see a string of letters.
+
+Your task is to decide whether the letter string is an existing English word or not. 
 If you think it is an existing English word, you click on the RIGHT arrow key, 
 and if you think it is not an existing English word, you click on the LEFT arrow key.
 
-You have as much time as you like for each decision. This part of the experiment will take about 5 minutes.
+You have as much time as you like for each decision.
+
+If you wish to stop the experiment, press ESCAPE at any time. 
 
 If everything is clear, press SPACE to start the experiment.""")
 text.draw()  # draw the stimulus to the back buffer
@@ -51,19 +55,22 @@ trialnr = 0
 for word in items.word:
     trialnr += 1
     # start each trial with a fixation cross of 500 ms
-    text.setText('+')
-    text.draw()  # draw the stimulus to the back buffer
+    stim.setText('+')
+    stim.draw()  # draw the stimulus to the back buffer
     win.flip()
     core.wait(0.5)
     # then show the word 
-    text.setText(word)
-    text.draw()
+    stim.setText(word)
+    stim.draw()
     win.flip()
     t0 = time.clock()
     # and wait for a button press, no time limit
-    answer = event.waitKeys(keyList=["right", "left"])
+    answer = event.waitKeys(keyList=["right", "left", "escape"])
     t1 = time.clock()
     rt = t1-t0 # get reaction time
+    
+    if answer[0]=="escape":
+        break
     
     # convert answer code to a number
     if answer[0] == "right":
@@ -80,8 +87,8 @@ for word in items.word:
     dataFile.write("{}, {}, {}, {}, {}\n".format(trialnr, word, response, rt, errorcode))
 
 # show a finished message
-text.setText('You are done! :-) ')
-text.draw()
+stim.setText('You are done! :-) ')
+stim.draw()
 win.flip()
 core.wait(1)
 
