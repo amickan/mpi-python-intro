@@ -36,7 +36,7 @@ if os.path.exists(filename):
     win.close()
     sys.exit("Stopped execution because file " + filename + " already exists!")
 dataFile = open(filename, 'w') 
-dataFile.write("#{}, {}, {}, {}, {}\n".format("trial_nr", "word", "response", "rt", "error"))
+dataFile.write("{}, {}, {}, {}, {}, {}\n".format("trial_nr", "word", "wordstatus", "response", "rt", "error"))
 
 # show instructions
 text.setText("""This test consists of 60 trials, in each of which you will see a string of letters.
@@ -90,7 +90,7 @@ for word in items.word:
     else:
         errorcode = 1
          
-    dataFile.write("{}, {}, {}, {}, {}\n".format(trialnr, word, response, rt, errorcode))
+    dataFile.write("{}, {}, {}, {}, {}, {}\n".format(trialnr, word, items.wordstatus[trialnr-1], response, rt, errorcode))
 
 # show a finished message
 stim.setText('You are done! :-) ')
