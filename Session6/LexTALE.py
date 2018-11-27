@@ -5,12 +5,23 @@
 
 # import psychopy's core module, and the visual module for presenting visual stimuli
 from psychopy import core, visual, event
+import pandas as pd
+import numpy as np
+import psychopy.gui
+import os
+import time
+
+# ask for participant number
+gui = psychopy.gui.Dlg()
+gui.addField("Pp-nr:")
+gui.show()
+ppnr = gui.data[0]
 
 # open a window of 800 by 600 pixels (note the tuple for specifying size!)
 win = visual.Window((1000, 800), color='teal')
 
 # prepare text stimulus
-text = visual.TextStim(win, text='0', color='white')
+text = visual.TextStim(win, text='0', color='white', wrapWidth=150)
 
 # show instructions
 text.setText("""This test consists of about 60 trials, in each of which you will see a string of letters. 
@@ -26,25 +37,36 @@ win.flip()
 
 # check for key presses
 keys = event.waitKeys(keyList=["space"])
-    
-#present empty screen for 1 second, just for now
-text.setText(' ')
-text.draw()  # draw the stimulus to the back buffer
-win.flip()
-core.wait(1)  # wait for 1 second on a blank window
 
-## read in stimuli from text file 
+# load trial dataframe 
+items = pd.read_table('testlist.txt')
 
-## loop over words and present them one by one until a button is pressed
-# right arrow for "Yes, it's a word"
-# left arrow for "No, it's not a word"
+# inititate a data frame
+data = []
 
-# record time of the button press relative to the picture presentation time 
+# set file name including the pnumber, and check whether the file exists already
+filename = ppnr + "_data_LexTALE.csv"
+if os.path.exists(filename):
+    sys.exit("File: " + filename + " already exists!")
+dataFile = open(filename, 'w') 
+dataFile.write("#{}, {}, {}\n".format("word", "response", "rt"))
 
-# append every trial to a csv file 
-
-# save the final csv file 
+# start experiment 
+for word in items.word:
+    # start each trial with a fixation cross of 500 ms
+    text.setText('+')
+    text.draw()  # draw the stimulus to the back buffer
+    win.flip()
+    core.wait(0.5)
+    # then show the word 
+    text.setText(word)
+    text.draw()
+    win.flip()
+    t0 = time.clock()
+    # and wait for a button press, no time limit
+    answer = event.waitKeys(keyList=["right", "left"])
+    t1 = time.clock()
+    rt = t1-t0
+    dataFile.write("{}, {}, {}\n".format(word, answer[0], rt))
 
 win.close()  # close the window
-
-
