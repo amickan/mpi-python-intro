@@ -44,10 +44,12 @@ filename = ppnr + "_data_LexTALE.csv"
 if os.path.exists(filename):
     sys.exit("File: " + filename + " already exists!")
 dataFile = open(filename, 'w') 
-dataFile.write("#{}, {}, {}\n".format("word", "response", "rt"))
+dataFile.write("#{}, {}, {}, {}, {}\n".format("trial_nr", "word", "response", "rt", "error"))
 
-# start experiment 
+# run experiment 
+trialnr = 0
 for word in items.word:
+    trialnr += 1
     # start each trial with a fixation cross of 500 ms
     text.setText('+')
     text.draw()  # draw the stimulus to the back buffer
@@ -61,9 +63,21 @@ for word in items.word:
     # and wait for a button press, no time limit
     answer = event.waitKeys(keyList=["right", "left"])
     t1 = time.clock()
-    rt = t1-t0
-    dataFile.write("{}, {}, {}\n".format(word, answer[0], rt))
+    rt = t1-t0 # get reaction time
     
+    # convert answer code to a number
+    if answer[0] == "right":
+        response = 1
+    else:
+        response = 0
+     
+    # check answer for correctness
+    if response == items.wordstatus[trialnr-1]:
+        errorcode = 0
+    else:
+        errorcode = 1
+         
+    dataFile.write("{}, {}, {}, {}, {}\n".format(trialnr, word, response, rt, errorcode))
 
 # show a finished message
 text.setText('You are done! :-) ')
