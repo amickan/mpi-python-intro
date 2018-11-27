@@ -1,27 +1,28 @@
-## LexTALE English
+# LexTALE English
 # In this experiment, people will see a number of English words, one after another. 
 # Their task is to decide for each word whether it is an actual existing English word or not. 
 # Reaction times and accuracy will be recorded and saved in a csv file. 
 
 # import psychopy's core module, and the visual module for presenting visual stimuli
-from psychopy import core, visual, event
+from psychopy import core, visual, event, gui
 import pandas as pd
 import numpy as np
-import psychopy.gui
 import os
 import time
 
+## prepare stimuli and window 
+# open a window of 800 by 600 pixels (note the tuple for specifying size!)
+win = visual.Window((1000, 800), color='teal')
+# prepare text stimulus
+text = visual.TextStim(win, text='0', color='white', wrapWidth=150)
+# load trial dataframe 
+items = pd.read_table('testlist.txt')
+
 # ask for participant number
-gui = psychopy.gui.Dlg()
+gui = gui.Dlg()
 gui.addField("Pp-nr:")
 gui.show()
 ppnr = gui.data[0]
-
-# open a window of 800 by 600 pixels (note the tuple for specifying size!)
-win = visual.Window((1000, 800), color='teal')
-
-# prepare text stimulus
-text = visual.TextStim(win, text='0', color='white', wrapWidth=150)
 
 # show instructions
 text.setText("""This test consists of about 60 trials, in each of which you will see a string of letters. 
@@ -35,14 +36,8 @@ If everything is clear, press SPACE to start the experiment.""")
 text.draw()  # draw the stimulus to the back buffer
 win.flip()
 
-# check for key presses
+# wait for PP to press space to continue
 keys = event.waitKeys(keyList=["space"])
-
-# load trial dataframe 
-items = pd.read_table('testlist.txt')
-
-# inititate a data frame
-data = []
 
 # set file name including the pnumber, and check whether the file exists already
 filename = ppnr + "_data_LexTALE.csv"
@@ -68,5 +63,12 @@ for word in items.word:
     t1 = time.clock()
     rt = t1-t0
     dataFile.write("{}, {}, {}\n".format(word, answer[0], rt))
+    
+
+# show a finished message
+text.setText('You are done! :-) ')
+text.draw()
+win.flip()
+core.wait(1)
 
 win.close()  # close the window
