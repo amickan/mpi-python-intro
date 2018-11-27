@@ -9,10 +9,11 @@ import pandas as pd
 import numpy as np
 import os
 import time
+import sys
 
 ## prepare stimuli and window 
 # open a window of 800 by 600 pixels (note the tuple for specifying size!)
-win = visual.Window((1000, 800), color='teal')
+win = visual.Window((1000, 800), color='grey')
 # prepare text stimulus
 text = visual.TextStim(win, text='0', color='white', wrapWidth=800, height = 24, units = 'pix')
 stim = visual.TextStim(win, text='0', color='white', wrapWidth=800, height = 30, units = 'pix')
@@ -24,6 +25,18 @@ gui = gui.Dlg()
 gui.addField("Pp-nr:")
 gui.show()
 ppnr = gui.data[0]
+
+# set file name including the pnumber, and check whether the file exists already
+filename = ppnr + "_data_LexTALE.csv"
+if os.path.exists(filename):
+    text.setText("This participant number has already been used! Use a different number.")
+    text.draw()
+    win.flip()
+    core.wait(2)
+    win.close()
+    sys.exit("Stopped execution because file " + filename + " already exists!")
+dataFile = open(filename, 'w') 
+dataFile.write("#{}, {}, {}, {}, {}\n".format("trial_nr", "word", "response", "rt", "error"))
 
 # show instructions
 text.setText("""This test consists of 60 trials, in each of which you will see a string of letters.
@@ -42,13 +55,6 @@ win.flip()
 
 # wait for PP to press space to continue
 keys = event.waitKeys(keyList=["space"])
-
-# set file name including the pnumber, and check whether the file exists already
-filename = ppnr + "_data_LexTALE.csv"
-if os.path.exists(filename):
-    sys.exit("File: " + filename + " already exists!")
-dataFile = open(filename, 'w') 
-dataFile.write("#{}, {}, {}, {}, {}\n".format("trial_nr", "word", "response", "rt", "error"))
 
 # run experiment 
 trialnr = 0
