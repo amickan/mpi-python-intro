@@ -11,7 +11,7 @@ trial_nr,word,wordstatus,response,rt,error
 10, alberation, 0, 0, 0.6616979999999995, 0
 11, unkempt, 1, 0, 0.2289940000000001, 1
 12, breeding, 1, 1, 0.44034899999999944, 0
-13, festivity, 1, 1, 0.3840590000000006, 0
+13, festivity, 1, 1, 0.3430299999999997, 0
 14, screech, 1, 1, 0.40291799999999967, 0
 15, savoury, 1, 1, 0.5789570000000008, 0
 16, plaudate, 0, 0, 0.7937570000000012, 0
@@ -23,7 +23,7 @@ trial_nr,word,wordstatus,response,rt,error
 22, recipient, 1, 1, 0.5674339999999987, 0
 23, exprate, 0, 0, 0.671716, 0
 24, eloquence, 1, 1, 0.55715000000000217, 0
-25, cleanliness, 1, 1, 0.44635800000000003, 0
+25, cleanliness, 1, 1, 0.3430299999999997, 0
 26, dispatch, 1, 1, 1.484523000000003, 0
 27, rebondicate, 0, 0, 0.8344479999999983, 0
 28, ingenious, 1, 1, 0.5695649999999972, 0
